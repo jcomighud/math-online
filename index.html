@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Kids - Fun Elementary Math Learning</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font: Fredoka / Quicksand -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Fredoka', 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #E0F2FE 0%, #F0F9FF 50%, #FEF3C7 100%);
+            min-height: 100vh;
+        }
+
+        .bouncy-hover {
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .bouncy-hover:hover {
+            transform: scale(1.05) translateY(-4px);
+        }
+        .bouncy-hover:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            80% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop {
+            animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+        .floating {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FBBF24;
+            border-radius: 10px;
+        }
+
+        /* Claymorphism style box shadows */
+        .clay-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(8px);
+            border: 3px solid #FFFFFF;
+        }
+
+        .clay-btn {
+            box-shadow: 0 6px 0 0 rgba(0,0,0,0.15);
+        }
+        .clay-btn:active {
+            box-shadow: 0 1px 0 0 rgba(0,0,0,0.15);
+            transform: translateY(5px);
+        }
+
+        /* SVG Slice Interactions */
+        .pie-slice {
+            transition: transform 0.2s ease, fill 0.2s ease;
+            cursor: pointer;
+        }
+        .pie-slice:hover {
+            opacity: 0.85;
+            transform: scale(1.03);
+            transform-origin: center;
+        }
+    </style>
+</head>
+<body class="text-slate-800 p-3 md:p-6 flex flex-col justify-between min-h-screen">
+
+    <!-- TOP HEADER / NAV -->
+    <header class="max-w-5xl mx-auto w-full clay-card p-4 mb-6 flex flex-wrap justify-between items-center gap-4">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('topics')">
+            <div class="bg-amber-400 text-white p-3 rounded-2xl shadow-md text-2xl flex items-center justify-center w-12 h-12">
+                <i class="fa-solid fa-shapes"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl md:text-3xl font-extrabold text-amber-500 tracking-wide">Math Explorer</h1>
+                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Elementary Math Adventure</p>
+            </div>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="flex items-center gap-3 sm:gap-6 bg-amber-50 px-4 py-2 rounded-2xl border border-amber-200">
+            <div class="flex items-center gap-2" title="Total Stars Earned">
+                <i class="fa-solid fa-star text-amber-400 text-xl animate-pulse"></i>
+                <span id="global-stars" class="font-extrabold text-xl text-slate-700">0</span>
+            </div>
+            <div class="h-6 w-0.5 bg-amber-200"></div>
+            <div class="flex items-center gap-2" title="Current Streak">
+                <i class="fa-solid fa-fire text-orange-500 text-xl"></i>
+                <span id="global-streak" class="font-extrabold text-xl text-slate-700">0</span>
+            </div>
+            <div class="h-6 w-0.5 bg-amber-200"></div>
+            <button id="sound-toggle" onclick="toggleSound()" class="text-slate-600 hover:text-amber-500 text-xl p-1 focus:outline-none" title="Toggle Sound">
+                <i class="fa-solid fa-volume-high" id="sound-icon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-5xl mx-auto w-full flex-grow flex flex-col justify-center">
+
+        <!-- TOPIC & MODE SELECTION SCREEN -->
+        <section id="screen-topics" class="space-y-6">
+            <div class="text-center max-w-xl mx-auto mb-4">
+                <h2 class="text-3xl font-bold text-slate-800">What do you want to learn today?</h2>
+                <p class="text-slate-600 font-medium">Select a topic to start lessons or enter practice mode!</p>
+            </div>
+
+            <!-- Math Topics Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Addition Card -->
+                <div class="clay-card p-6 flex flex-col justify-between bouncy-hover border-t-8 border-emerald-400">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-emerald-100 text-emerald-700 font-bold px-3 py-1 rounded-full text-xs">Grades 1-2</span>
+                            <i class="fa-solid fa-plus text-3xl text-emerald-500"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-1">Addition</h3>
+                        <p class="text-sm text-slate-500 mb-4">Putting groups together! Plus signs, counting up, and carrying over.</p>
+                    </div>
+                    <div class="space-y-2">
+                        <button onclick="startLesson('addition')" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2.5 px-4 rounded-xl clay-btn transition duration-150 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-book-open"></i> Learn Lesson
+                        </button>
+                        <button onclick="startPractice('addition')" class="w-full bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold py-2.5 px-4 rounded-xl transition duration-150 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-pencil"></i> Practice
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Subtraction Card -->
+                <div class="clay-card p-6 flex flex-col justify-between bouncy-hover border-t-8 border-sky-400">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-sky-100 text-sky-700 font-bold px-3 py-1 rounded-full text-xs">Grades 1-2</span>
+                            <i class="fa-solid fa-minus text-3xl text-sky-500"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-1">Subtraction</h3>
+                        <p class="text-sm text-slate-500 mb-4">Taking away and finding the difference! Borrowing made easy.</p>
+                    </div>
+                    <div class="space-y-2">
+                        <button onclick="startLesson('subtraction')" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-2.5 px-4 rounded-xl clay-btn transition duration-150 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-book-open"></i> Learn Lesson
+                        </button>
+                        <button onclick="startPractice('subtraction')" class="w-full bg-sky-100 hover:bg-sky-200 text-sky-800 font-bold py-2.5 px-4 rounded-xl transition duration-150 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-pencil"></i> Practice
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Multiplication Card -->
+                <div class="clay-card p-6 flex flex-col justify-between bouncy-hover border-t-8 border-purple-400">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-purple-100 text-purple-700 font-bold px-3 py-1 rounded-full text-xs">Grades 2-4</span>
+                            <i class="fa-solid fa-xmark text-3xl text-purple-500"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-1">Multiplication</h3>
+                        <p class="text-sm text-slate-500 mb-4">Fast repeated addition! Visualizing grids and times tables.</p>
+                    </div>
+                    <div class="space-y-2">
+                        <button onclick="startLesson('multiplication')" class="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-2.5 px-4 rounded-xl clay-btn transition duration-150 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-book-open"></i> Learn Lesson
+                        </button>
+                        <button onclick="startPractice('multiplication')" class="w-full bg-purple-100 hover:bg-purple-200 text-purple-800 font-bold py-2.5 px-4 rounded-xl transition duration-150 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-pencil"></i> Practice
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Division Card -->
+                <div class="clay-card p-6 flex flex-col justify-between bouncy-hover border-t-8 border-rose-400">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-rose-100 text-rose-700 font-bold px-3 py-1 rounded-full text-xs">Grades 3-5</span>
+                            <i class="fa-solid fa-divide text-3xl text-rose-500"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-1">Division</h3>
+                        <p class="text-sm text-slate-500 mb-4">Sharing into equal groups! Grouping items fairly and smoothly.</p>
+                    </div>
+                    <div class="space-y-2">
+                        <button onclick="startLesson('division')" class="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-2.5 px-4 rounded-xl clay-btn transition duration-150 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-book-open"></i> Learn Lesson
+                        </button>
+                        <button onclick="startPractice('division')" class="w-full bg-rose-100 hover:bg-rose-200 text-rose-800 font-bold py-2.5 px-4 rounded-xl transition duration-150 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-pencil"></i> Practice
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Fractions & Decimals Card -->
+                <div class="clay-card p-6 flex flex-col justify-between bouncy-hover border-t-8 border-amber-400">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-amber-100 text-amber-700 font-bold px-3 py-1 rounded-full text-xs">Grades 3-5</span>
+                            <i class="fa-solid fa-chart-pie text-3xl text-amber-500"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-1">Fractions & Decimals</h3>
+                        <p class="text-sm text-slate-500 mb-4">Interactive pie charts & bars! Understand numerators and denominators.</p>
+                    </div>
+                    <div class="space-y-2">
+                        <button onclick="startLesson('fractions')" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 px-4 rounded-xl clay-btn transition duration-150 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-book-open"></i> Learn Lesson
+                        </button>
+                        <button onclick="startPractice('fractions')" class="w-full bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold py-2.5 px-4 rounded-xl transition duration-150 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-pencil"></i> Practice
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Timed Quiz Banner Card -->
+                <div class="clay-card p-6 flex flex-col justify-between bg-gradient-to-br from-indigo-500 to-purple-600 text-white border-none shadow-lg bouncy-hover">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-white/20 text-white font-bold px-3 py-1 rounded-full text-xs backdrop-blur-md">All Grades</span>
+                            <i class="fa-solid fa-stopwatch text-3xl text-yellow-300 animate-bounce"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-1">Speed Quiz Challenge</h3>
+                        <p class="text-sm text-indigo-100 mb-4">Test your speed! Solve as many math problems as you can in 60 seconds.</p>
+                        <div class="text-xs bg-black/20 p-2 rounded-lg mb-4 text-center">
+                            <i class="fa-solid fa-trophy text-yellow-300 mr-1"></i> Best Score: <span id="high-score-display" class="font-extrabold text-yellow-300">0</span> pts
+                        </div>
+                    </div>
+                    <button onclick="startTimedQuiz()" class="w-full bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-extrabold py-3 px-4 rounded-xl clay-btn transition duration-150 flex items-center justify-center gap-2 text-lg">
+                        <i class="fa-solid fa-bolt"></i> Start Game Mode!
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- GUIDED LESSON SCREEN -->
+        <section id="screen-lesson" class="hidden space-y-6">
+            <div class="flex justify-between items-center mb-2">
+                <button onclick="switchTab('topics')" class="bg-white hover:bg-slate-100 text-slate-700 font-bold px-4 py-2 rounded-xl border flex items-center gap-2 transition">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Topics
+                </button>
+                <span id="lesson-badge" class="font-bold px-3 py-1 rounded-full text-xs uppercase bg-emerald-100 text-emerald-800">Lesson Mode</span>
+            </div>
+
+            <div class="clay-card p-6 md:p-8 min-h-[400px] flex flex-col justify-between">
+                <div>
+                    <!-- Header -->
+                    <div class="border-b pb-4 mb-6 flex justify-between items-center">
+                        <h2 id="lesson-title" class="text-2xl md:text-3xl font-extrabold text-slate-800">Lesson Title</h2>
+                        <div id="lesson-step-indicator" class="text-sm font-bold text-slate-400">Step 1 of 3</div>
+                    </div>
+
+                    <!-- Step Content Container -->
+                    <div id="lesson-content-box" class="space-y-6">
+                        <!-- Dynamic lesson cards inserted via JS -->
+                    </div>
+                </div>
+
+                <!-- Lesson Navigation Buttons -->
+                <div class="flex justify-between items-center mt-8 pt-4 border-t">
+                    <button id="lesson-prev-btn" onclick="navigateLesson(-1)" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-6 py-3 rounded-xl transition">
+                        <i class="fa-solid fa-chevron-left mr-2"></i> Previous
+                    </button>
+                    <button id="lesson-next-btn" onclick="navigateLesson(1)" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold px-6 py-3 rounded-xl clay-btn transition">
+                        Next <i class="fa-solid fa-chevron-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRACTICE MODE SCREEN -->
+        <section id="screen-practice" class="hidden space-y-6">
+            <div class="flex justify-between items-center mb-2">
+                <button onclick="switchTab('topics')" class="bg-white hover:bg-slate-100 text-slate-700 font-bold px-4 py-2 rounded-xl border flex items-center gap-2 transition">
+                    <i class="fa-solid fa-arrow-left"></i> Exit Practice
+                </button>
+                <div class="flex items-center gap-3">
+                    <span id="practice-grade-tag" class="bg-purple-100 text-purple-700 text-xs font-bold px-3 py-1 rounded-full">Topic</span>
+                </div>
+            </div>
+
+            <div class="clay-card p-6 md:p-8 relative overflow-hidden">
+                <!-- Top Progress -->
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-bullseye text-red-500"></i>
+                        <span class="font-bold text-sm text-slate-600">Question <span id="practice-count">1</span></span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-trophy text-amber-400"></i>
+                        <span class="font-bold text-sm text-slate-600">Score: <span id="practice-score">0</span></span>
+                    </div>
+                </div>
+
+                <!-- Main Question Area -->
+                <div class="text-center my-6">
+                    <div id="practice-question-container" class="text-4xl md:text-6xl font-black text-slate-800 tracking-wide mb-6 min-h-[80px] flex items-center justify-center gap-4">
+                        <!-- Dynamic Question -->
+                    </div>
+
+                    <!-- Visual Block & SVG Visualizer Display -->
+                    <div id="practice-visual-aid" class="min-h-[120px] flex flex-wrap justify-center items-center gap-6 my-4 p-4 bg-amber-50/50 rounded-2xl border border-dashed border-amber-200">
+                        <!-- Dynamic Visual Chart/Icons -->
+                    </div>
+                </div>
+
+                <!-- Answer Input & Buttons -->
+                <div class="max-w-md mx-auto space-y-4">
+                    <!-- Multiple choice grid -->
+                    <div id="practice-options-grid" class="grid grid-cols-2 gap-4">
+                        <!-- Dynamic option buttons -->
+                    </div>
+
+                    <!-- Feedback Box -->
+                    <div id="practice-feedback" class="hidden p-4 rounded-2xl text-center font-bold text-lg animate-pop">
+                        <!-- Success / Hint text -->
+                    </div>
+
+                    <!-- Hint / Next Buttons -->
+                    <div class="flex gap-3 justify-center pt-2">
+                        <button id="practice-hint-btn" onclick="togglePracticeHint()" class="text-amber-600 bg-amber-100 hover:bg-amber-200 font-bold px-4 py-2 rounded-xl text-sm transition flex items-center gap-2">
+                            <i class="fa-regular fa-lightbulb"></i> Need a Hint?
+                        </button>
+                        <button id="practice-next-btn" onclick="nextPracticeQuestion()" class="hidden bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-6 py-2.5 rounded-xl clay-btn transition flex items-center gap-2">
+                            Next Question <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Visual Hint Box -->
+                <div id="practice-hint-box" class="hidden mt-6 p-4 bg-sky-50 border border-sky-200 rounded-2xl text-slate-700 text-sm">
+                    <div class="font-bold text-sky-800 mb-1 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info"></i> How to solve this:
+                    </div>
+                    <div id="practice-hint-text">Step by step explanation...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TIMED QUIZ GAME SCREEN -->
+        <section id="screen-quiz" class="hidden space-y-6">
+            <div class="clay-card p-6 md:p-8 max-w-2xl mx-auto text-center relative">
+                
+                <!-- Active Quiz UI -->
+                <div id="quiz-active-container">
+                    <div class="flex justify-between items-center mb-6">
+                        <!-- Timer Circle -->
+                        <div class="flex items-center gap-2 bg-rose-100 text-rose-700 px-4 py-2 rounded-full font-bold">
+                            <i class="fa-solid fa-clock animate-spin"></i>
+                            <span id="quiz-timer" class="text-xl">60</span>s
+                        </div>
+                        <!-- Score Display -->
+                        <div class="flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-2 rounded-full font-bold">
+                            <i class="fa-solid fa-star text-amber-500"></i>
+                            <span>Score: <span id="quiz-score" class="text-xl">0</span></span>
+                        </div>
+                    </div>
+
+                    <div class="my-8">
+                        <p class="text-sm text-slate-400 uppercase tracking-widest font-bold mb-2">Solve Fast!</p>
+                        <div id="quiz-question" class="text-5xl md:text-6xl font-black text-slate-800 mb-8 min-h-[70px] flex items-center justify-center">
+                            12 + 5 = ?
+                        </div>
+
+                        <!-- 4 Big Choice Buttons -->
+                        <div id="quiz-options" class="grid grid-cols-2 gap-4 max-w-md mx-auto">
+                            <!-- Dynamic choices -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz Game Over Screen -->
+                <div id="quiz-over-container" class="hidden space-y-6 py-6">
+                    <div class="w-20 h-20 bg-amber-100 text-amber-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-2 floating">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <h2 class="text-3xl font-black text-slate-800">Time's Up! Great Job!</h2>
+                    
+                    <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6 max-w-xs mx-auto space-y-2">
+                        <div class="text-slate-500 text-sm font-bold">Your Score</div>
+                        <div id="quiz-final-score" class="text-5xl font-black text-amber-500">0</div>
+                        <div id="quiz-high-score-msg" class="text-xs font-bold text-emerald-600 hidden">
+                            🎉 NEW HIGH SCORE! 🎉
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 justify-center pt-4">
+                        <button onclick="startTimedQuiz()" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-extrabold px-6 py-3 rounded-xl clay-btn transition">
+                            <i class="fa-solid fa-rotate-right mr-2"></i> Play Again
+                        </button>
+                        <button onclick="switchTab('topics')" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-6 py-3 rounded-xl transition">
+                            Back to Home
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="max-w-5xl mx-auto w-full text-center py-4 text-xs font-bold text-slate-400 mt-6">
+        Math Explorer &bull; Learning Made Fun for Elementary Students
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        /* ==========================================================================
+           1. AUDIO SYNTHESIS (Web Audio API)
+           ========================================================================== */
+        let audioCtx = null;
+        let soundEnabled = true;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            initAudio();
+
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(180, now);
+                    osc.frequency.setValueAtTime(140, now + 0.15);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'click') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(400, now);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === 'win') {
+                    const notes = [440, 554.37, 659.25, 880];
+                    notes.forEach((freq, idx) => {
+                        const noteOsc = audioCtx.createOscillator();
+                        const noteGain = audioCtx.createGain();
+                        noteOsc.connect(noteGain);
+                        noteGain.connect(audioCtx.destination);
+                        noteOsc.frequency.value = freq;
+                        noteGain.gain.setValueAtTime(0.15, now + idx * 0.08);
+                        noteGain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.08 + 0.2);
+                        noteOsc.start(now + idx * 0.08);
+                        noteOsc.stop(now + idx * 0.08 + 0.2);
+                    });
+                }
+            } catch(e) {
+                console.log("Audio not supported or blocked");
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            if (soundEnabled) {
+                icon.className = "fa-solid fa-volume-high";
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-slate-400";
+            }
+        }
+
+        /* ==========================================================================
+           2. APP STATE & LOCAL STORAGE
+           ========================================================================== */
+        let state = {
+            stars: parseInt(localStorage.getItem('math_kids_stars')) || 0,
+            streak: parseInt(localStorage.getItem('math_kids_streak')) || 0,
+            highScore: parseInt(localStorage.getItem('math_kids_highscore')) || 0,
+            currentTopic: 'addition',
+            lessonStep: 0,
+            practiceScore: 0,
+            practiceQuestionCount: 1,
+            currentQuestion: null,
+            quizTimer: null,
+            quizTimeLeft: 60,
+            quizScore: 0
+        };
+
+        function updateHeaderStats() {
+            document.getElementById('global-stars').textContent = state.stars;
+            document.getElementById('global-streak').textContent = state.streak;
+            document.getElementById('high-score-display').textContent = state.highScore;
+            localStorage.setItem('math_kids_stars', state.stars);
+            localStorage.setItem('math_kids_streak', state.streak);
+            localStorage.setItem('math_kids_highscore', state.highScore);
+        }
+        updateHeaderStats();
+
+        function switchTab(screenId) {
+            playSound('click');
+            ['topics', 'lesson', 'practice', 'quiz'].forEach(id => {
+                document.getElementById(`screen-${id}`).classList.add('hidden');
+            });
+            document.getElementById(`screen-${screenId}`).classList.remove('hidden');
+
+            if (state.quizTimer) {
+                clearInterval(state.quizTimer);
+            }
+        }
+
+        /* ==========================================================================
+           3. SVG VISUALIZERS (PIE CHARTS & FRACTION BARS)
+           ========================================================================== */
+        function createPieChartSVG(numerator, denominator, size = 110, activeColor = '#F59E0B', baseColor = '#FDE68A') {
+            if (denominator <= 0) return '';
+            const radius = size / 2 - 5;
+            const cx = size / 2;
+            const cy = size / 2;
+
+            if (denominator === 1) {
+                const fill = numerator >= 1 ? activeColor : baseColor;
+                return `<svg width="${size}" height="${size}" class="inline-block drop-shadow-sm">
+                    <circle cx="${cx}" cy="${cy}" r="${radius}" fill="${fill}" stroke="#FFFFFF" stroke-width="3"/>
+                </svg>`;
+            }
+
+            let svgPaths = '';
+            const angleStep = (2 * Math.PI) / denominator;
+
+            for (let i = 0; i < denominator; i++) {
+                const startAngle = i * angleStep - Math.PI / 2;
+                const endAngle = (i + 1) * angleStep - Math.PI / 2;
+
+                const x1 = cx + radius * Math.cos(startAngle);
+                const y1 = cy + radius * Math.sin(startAngle);
+                const x2 = cx + radius * Math.cos(endAngle);
+                const y2 = cy + radius * Math.sin(endAngle);
+
+                const largeArc = angleStep > Math.PI ? 1 : 0;
+                const pathData = `M ${cx} ${cy} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2} Z`;
+
+                const isFilled = i < numerator;
+                const color = isFilled ? activeColor : baseColor;
+
+                svgPaths += `<path d="${pathData}" fill="${color}" stroke="#FFFFFF" stroke-width="2.5" class="pie-slice"/>`;
+            }
+
+            return `<svg width="${size}" height="${size}" class="inline-block drop-shadow-sm animate-pop" viewBox="0 0 ${size} ${size}">
+                ${svgPaths}
+            </svg>`;
+        }
+
+        function createFractionBarSVG(numerator, denominator, width = 160, height = 36, activeColor = '#F59E0B', baseColor = '#FDE68A') {
+            if (denominator <= 0) return '';
+            const segWidth = (width - 4) / denominator;
+
+            let segments = '';
+            for (let i = 0; i < denominator; i++) {
+                const x = 2 + i * segWidth;
+                const fill = i < numerator ? activeColor : baseColor;
+                segments += `<rect x="${x}" y="2" width="${segWidth}" height="${height - 4}" fill="${fill}" stroke="#FFFFFF" stroke-width="2" rx="4"/>`;
+            }
+
+            return `<svg width="${width}" height="${height}" class="inline-block drop-shadow-sm animate-pop">
+                <rect x="0" y="0" width="${width}" height="${height}" fill="none" stroke="#CBD5E1" stroke-width="2" rx="6"/>
+                ${segments}
+            </svg>`;
+        }
+
+        /* Dynamic Interactive Slice Counter Demo for Lessons */
+        let demoSlicesSelected = 2;
+        const demoTotalSlices = 4;
+
+        function updateInteractivePieDemo(increment) {
+            demoSlicesSelected = Math.max(0, Math.min(demoTotalSlices, demoSlicesSelected + increment));
+            playSound('click');
+            
+            const container = document.getElementById('interactive-pie-container');
+            if (container) {
+                container.innerHTML = `
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-6 bg-amber-50 p-6 rounded-2xl border border-amber-200">
+                        <div class="flex flex-col items-center">
+                            ${createPieChartSVG(demoSlicesSelected, demoTotalSlices, 120, '#F59E0B', '#FDE68A')}
+                            <span class="text-xs font-bold text-amber-700 mt-2">${demoSlicesSelected} of ${demoTotalSlices} Slices</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="text-4xl font-extrabold text-amber-600">${demoSlicesSelected} / ${demoTotalSlices}</div>
+                            <div class="flex gap-2">
+                                <button onclick="updateInteractivePieDemo(-1)" class="bg-amber-200 hover:bg-amber-300 text-amber-800 font-bold px-3 py-1 rounded-xl shadow-sm">- Slices</button>
+                                <button onclick="updateInteractivePieDemo(1)" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold px-3 py-1 rounded-xl shadow-sm">+ Slices</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        /* ==========================================================================
+           4. GUIDED LESSON DATA & LOGIC
+           ========================================================================== */
+        const LESSONS = {
+            addition: {
+                title: "Understanding Addition (+)",
+                badgeClass: "bg-emerald-100 text-emerald-800",
+                steps: [
+                    {
+                        subtitle: "1. What is Addition?",
+                        html: `
+                            <p class="text-base md:text-lg mb-4 text-slate-700">Addition means combining two or more sets of items to find the total count!</p>
+                            <div class="flex flex-wrap items-center justify-center gap-4 bg-emerald-50 p-6 rounded-2xl border border-emerald-200 text-2xl font-bold">
+                                <div class="flex gap-1 text-emerald-600">🍎 🍎 🍎 <span class="text-xs text-slate-400 block w-full text-center">3 Apples</span></div>
+                                <span class="text-3xl text-emerald-500">+</span>
+                                <div class="flex gap-1 text-emerald-600">🍎 🍎 <span class="text-xs text-slate-400 block w-full text-center">2 Apples</span></div>
+                                <span class="text-3xl text-emerald-500">=</span>
+                                <div class="text-3xl text-emerald-700 bg-white px-4 py-2 rounded-xl shadow-sm">5 Apples</div>
+                            </div>
+                        `
+                    },
+                    {
+                        subtitle: "2. The Plus Sign & Total",
+                        html: `
+                            <p class="text-base md:text-lg mb-4 text-slate-700">The plus sign (<strong class="text-emerald-600">+</strong>) tells us to put numbers together. The equals sign (<strong class="text-emerald-600">=</strong>) shows the final answer.</p>
+                            <div class="bg-emerald-50 p-6 rounded-2xl border border-emerald-200 text-center space-y-3">
+                                <div class="text-4xl font-extrabold text-slate-800">4 + 3 = 7</div>
+                                <p class="text-sm text-slate-600">If you have 4 star stickers and get 3 more, you now have 7 star stickers!</p>
+                            </div>
+                        `
+                    }
+                ]
+            },
+            subtraction: {
+                title: "Understanding Subtraction (-)",
+                badgeClass: "bg-sky-100 text-sky-800",
+                steps: [
+                    {
+                        subtitle: "1. Taking Away",
+                        html: `
+                            <p class="text-base md:text-lg mb-4 text-slate-700">Subtraction means taking items away from a group to see what is left over!</p>
+                            <div class="flex flex-wrap items-center justify-center gap-4 bg-sky-50 p-6 rounded-2xl border border-sky-200 text-2xl font-bold">
+                                <div class="flex gap-1 text-sky-600">⭐ ⭐ ⭐ ⭐ ⭐ <span class="text-xs text-slate-400 block w-full text-center">5 Stars</span></div>
+                                <span class="text-3xl text-sky-500">-</span>
+                                <div class="flex gap-1 text-red-400">⭐ ⭐ <span class="text-xs text-slate-400 block w-full text-center">2 Taken Away</span></div>
+                                <span class="text-3xl text-sky-500">=</span>
+                                <div class="text-3xl text-sky-700 bg-white px-4 py-2 rounded-xl shadow-sm">3 Left</div>
+                            </div>
+                        `
+                    },
+                    {
+                        subtitle: "2. Finding the Difference",
+                        html: `
+                            <p class="text-base md:text-lg mb-4 text-slate-700">Subtraction also helps us find out how many more one group has than another.</p>
+                            <div class="bg-sky-50 p-6 rounded-2xl border border-sky-200 text-center space-y-3">
+                                <div class="text-4xl font-extrabold text-slate-800">8 - 3 = 5</div>
+                                <p class="text-sm text-slate-600">Start with 8, remove 3, and you are left with 5!</p>
+                            </div>
+                        `
+                    }
+                ]
+            },
+            multiplication: {
+                title: "Understanding Multiplication (×)",
+                badgeClass: "bg-purple-100 text-purple-800",
+                steps: [
+                    {
+                        subtitle: "1. Repeated Addition",
+                        html: `
+                            <p class="text-base md:text-lg mb-4 text-slate-700">Multiplication is a fast way to do repeated addition! Instead of adding 3 + 3 + 3 + 3, we write 4 × 3.</p>
+                            <div class="bg-purple-50 p-6 rounded-2xl border border-purple-200 text-center space-y-3">
+                                <div class="text-3xl font-extrabold text-slate-800">4 groups of 3 = 12</div>
+                                <div class="text-purple-600 font-bold text-lg">3 + 3 + 3 + 3 = 12</div>
+                            </div>
+                        `
+                    },
+                    {
+                        subtitle: "2. Visualizing Arrays",
+                        html: `
+                            <p class="text-base md:text-lg mb-4 text-slate-700">Think of multiplication as rows and columns in a grid or box of chocolates!</p>
+                            <div class="bg-purple-50 p-6 rounded-2xl border border-purple-200 text-center">
+                                <div class="inline-grid grid-cols-4 gap-2 text-2xl my-2">
+                                    <span>🔵</span><span>🔵</span><span>🔵</span><span>🔵</span>
+                                    <span>🔵</span><span>🔵</span><span>🔵</span><span>🔵</span>
+                                    <span>🔵</span><span>🔵</span><span>🔵</span><span>🔵</span>
+                                </div>
+                                <p class="text-sm font-bold text-purple-700">3 rows of 4 = 12 dots (3 × 4 = 12)</p>
+                            </div>
+                        `
+                    }
+                ]
+            },
+            division: {
+                title: "Understanding Division (÷)",
+                badgeClass: "bg-rose-100 text-rose-800",
+                steps: [
+                    {
+                        subtitle: "1. Fair Sharing",
+                        html: `
+                            <p class="text-base md:text-lg mb-4 text-slate-700">Division means sharing a total amount equally among a number of groups.</p>
+                            <div class="bg-rose-50 p-6 rounded-2xl border border-rose-200 text-center space-y-3">
+                                <div class="text-3xl font-extrabold text-slate-800">12 Cookies ÷ 3 Friends = 4 Cookies Each</div>
+                                <p class="text-sm text-slate-600">Everyone gets an equal share so nobody fights over snacks!</p>
+                            </div>
+                        `
+                    }
+                ]
+            },
+            fractions: {
+                title: "Understanding Fractions & Decimals",
+                badgeClass: "bg-amber-100 text-amber-800",
+                steps: [
+                    {
+                        subtitle: "1. Parts of a Whole (Interactive Pie Chart)",
+                        html: `
+                            <p class="text-base md:text-lg mb-4 text-slate-700">A fraction represents equal parts of a whole item. Try clicking the buttons below to change slices!</p>
+                            <div id="interactive-pie-container"></div>
+                        `
+                    },
+                    {
+                        subtitle: "2. Fraction Bars & Numerators",
+                        html: `
+                            <p class="text-base md:text-lg mb-4 text-slate-700">In a fraction like <strong>3 / 5</strong>, the top number (Numerator) is how many shaded blocks you have, and the bottom (Denominator) is the total blocks!</p>
+                            <div class="flex flex-col items-center justify-center bg-amber-50 p-6 rounded-2xl border border-amber-200 space-y-3">
+                                <div id="lesson-bar-demo"></div>
+                                <p class="text-sm font-bold text-amber-800">3 shaded out of 5 total blocks = 3 / 5</p>
+                            </div>
+                        `
+                    }
+                ]
+            }
+        };
+
+        function startLesson(topicKey) {
+            state.currentTopic = topicKey;
+            state.lessonStep = 0;
+            const lesson = LESSONS[topicKey];
+
+            document.getElementById('lesson-title').textContent = lesson.title;
+            const badge = document.getElementById('lesson-badge');
+            badge.className = `font-bold px-3 py-1 rounded-full text-xs uppercase ${lesson.badgeClass}`;
+            badge.textContent = `${topicKey.toUpperCase()} LESSON`;
+
+            renderLessonStep();
+            switchTab('lesson');
+        }
+
+        function renderLessonStep() {
+            const lesson = LESSONS[state.currentTopic];
+            const step = lesson.steps[state.lessonStep];
+
+            document.getElementById('lesson-step-indicator').textContent = `Step ${state.lessonStep + 1} of ${lesson.steps.length}`;
+            document.getElementById('lesson-content-box').innerHTML = `
+                <div class="space-y-4 animate-pop">
+                    <h3 class="text-xl font-bold text-amber-600">${step.subtitle}</h3>
+                    ${step.html}
+                </div>
+            `;
+
+            if (state.currentTopic === 'fractions') {
+                if (state.lessonStep === 0) {
+                    updateInteractivePieDemo(0);
+                } else if (state.lessonStep === 1) {
+                    const barDemo = document.getElementById('lesson-bar-demo');
+                    if (barDemo) {
+                        barDemo.innerHTML = createFractionBarSVG(3, 5, 200, 40, '#F59E0B', '#FDE68A');
+                    }
+                }
+            }
+
+            document.getElementById('lesson-prev-btn').style.visibility = state.lessonStep === 0 ? 'hidden' : 'visible';
+            const nextBtn = document.getElementById('lesson-next-btn');
+            if (state.lessonStep === lesson.steps.length - 1) {
+                nextBtn.innerHTML = `Finish & Practice <i class="fa-solid fa-check ml-2"></i>`;
+            } else {
+                nextBtn.innerHTML = `Next <i class="fa-solid fa-chevron-right ml-2"></i>`;
+            }
+        }
+
+        function navigateLesson(direction) {
+            playSound('click');
+            const lesson = LESSONS[state.currentTopic];
+            state.lessonStep += direction;
+
+            if (state.lessonStep >= lesson.steps.length) {
+                startPractice(state.currentTopic);
+            } else if (state.lessonStep < 0) {
+                state.lessonStep = 0;
+            } else {
+                renderLessonStep();
+            }
+        }
+
+        /* ==========================================================================
+           5. PRACTICE MODE GENERATOR & LOGIC
+           ========================================================================== */
+        function startPractice(topicKey) {
+            state.currentTopic = topicKey;
+            state.practiceScore = 0;
+            state.practiceQuestionCount = 1;
+
+            document.getElementById('practice-grade-tag').textContent = topicKey.toUpperCase() + ' PRACTICE';
+            generatePracticeQuestion();
+            switchTab('practice');
+        }
+
+        function generatePracticeQuestion() {
+            // Reset UI state
+            document.getElementById('practice-feedback').classList.add('hidden');
+            document.getElementById('practice-next-btn').classList.add('hidden');
+            document.getElementById('practice-hint-box').classList.add('hidden');
+            document.getElementById('practice-count').textContent = state.practiceQuestionCount;
+            document.getElementById('practice-score').textContent = state.practiceScore;
+
+            let num1, num2, symbol, answer, hintText;
+            const topic = state.currentTopic;
+            const visualAid = document.getElementById('practice-visual-aid');
+            visualAid.innerHTML = '';
+
+            if (topic === 'addition') {
+                num1 = Math.floor(Math.random() * 15) + 1;
+                num2 = Math.floor(Math.random() * 15) + 1;
+                symbol = '+';
+                answer = num1 + num2;
+                hintText = `Count out ${num1} items, then add ${num2} more items and count the total!`;
+
+                if (num1 <= 10 && num2 <= 10) {
+                    let emojis1 = Array(num1).fill('⭐').join(' ');
+                    let emojis2 = Array(num2).fill('🔵').join(' ');
+                    visualAid.innerHTML = `<span class="text-lg">${emojis1} &nbsp;&nbsp;|&nbsp;&nbsp; ${emojis2}</span>`;
+                }
+            } else if (topic === 'subtraction') {
+                num1 = Math.floor(Math.random() * 15) + 5;
+                num2 = Math.floor(Math.random() * num1) + 1;
+                symbol = '-';
+                answer = num1 - num2;
+                hintText = `Start with ${num1} items and take away ${num2} items. How many are left?`;
+
+                if (num1 <= 10) {
+                    let emojis1 = Array(num1).fill('⭐').join(' ');
+                    visualAid.innerHTML = `<span class="text-lg">${emojis1}</span>`;
+                }
+            } else if (topic === 'multiplication') {
+                num1 = Math.floor(Math.random() * 8) + 2;
+                num2 = Math.floor(Math.random() * 8) + 2;
+                symbol = '×';
+                answer = num1 * num2;
+                hintText = `Add number ${num1} to itself ${num2} times (${Array(num2).fill(num1).join(' + ')}).`;
+            } else if (topic === 'division') {
+                num2 = Math.floor(Math.random() * 8) + 2;
+                answer = Math.floor(Math.random() * 8) + 2;
+                num1 = num2 * answer;
+                symbol = '÷';
+                hintText = `Share ${num1} items equally among ${num2} groups. Each group gets ${answer}!`;
+            } else {
+                // Fractions & Decimals with Interactive SVG Pie Charts and Bars
+                const modeType = Math.random() > 0.5 ? 'pie_add' : 'bar_identify';
+
+                if (modeType === 'pie_add') {
+                    const denoms = [2, 3, 4, 6, 8];
+                    const d = denoms[Math.floor(Math.random() * denoms.length)];
+                    const n1 = Math.floor(Math.random() * (d - 1)) + 1;
+                    const n2 = Math.floor(Math.random() * (d - n1)) + 1;
+
+                    num1 = `${n1}/${d}`;
+                    num2 = `${n2}/${d}`;
+                    symbol = '+';
+                    answer = `${n1 + n2}/${d}`;
+                    hintText = `Since both denominator circles are cut into ${d} equal slices, add top numerators: ${n1} + ${n2} = ${n1 + n2}.`;
+
+                    const pie1 = createPieChartSVG(n1, d, 90, '#10B981', '#D1FAE5');
+                    const pie2 = createPieChartSVG(n2, d, 90, '#3B82F6', '#DBEAFE');
+
+                    visualAid.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <div class="text-center">${pie1}<div class="text-xs font-bold text-slate-500 mt-1">${num1}</div></div>
+                            <span class="text-2xl font-bold text-amber-500">+</span>
+                            <div class="text-center">${pie2}<div class="text-xs font-bold text-slate-500 mt-1">${num2}</div></div>
+                        </div>
+                    `;
+                } else {
+                    // Bar Fraction Identification
+                    const denoms = [3, 4, 5, 6, 8];
+                    const d = denoms[Math.floor(Math.random() * denoms.length)];
+                    const n = Math.floor(Math.random() * (d - 1)) + 1;
+
+                    num1 = "Fraction of shaded bar";
+                    num2 = "";
+                    symbol = "=";
+                    answer = `${n}/${d}`;
+                    hintText = `Count the shaded blocks (${n}) for the top number, and total blocks (${d}) for the bottom number.`;
+
+                    const barSvg = createFractionBarSVG(n, d, 220, 44, '#F59E0B', '#FDE68A');
+                    visualAid.innerHTML = `
+                        <div class="flex flex-col items-center gap-2">
+                            ${barSvg}
+                            <span class="text-xs font-bold text-slate-500">What fraction is shaded above?</span>
+                        </div>
+                    `;
+                }
+            }
+
+            state.currentQuestion = { num1, num2, symbol, answer, hintText };
+
+            // Render Question Text
+            if (state.currentTopic === 'fractions' && num1.includes('Fraction')) {
+                document.getElementById('practice-question-container').innerHTML = `
+                    <span class="text-2xl md:text-3xl font-extrabold text-slate-700">Select Fraction:</span>
+                `;
+            } else {
+                document.getElementById('practice-question-container').innerHTML = `
+                    <span>${num1}</span>
+                    <span class="text-amber-500">${symbol}</span>
+                    <span>${num2}</span>
+                    <span>=</span>
+                    <span class="text-emerald-600">?</span>
+                `;
+            }
+
+            // Generate Options (1 correct, 3 distractors)
+            let options = [answer];
+            while (options.length < 4) {
+                let fake;
+                if (topic === 'fractions') {
+                    const parts = answer.split('/');
+                    const numAns = parseInt(parts[0]);
+                    const denAns = parseInt(parts[1]);
+                    let offset = (Math.random() > 0.5 ? 1 : -1) * (Math.floor(Math.random() * 2) + 1);
+                    let fakeNum = Math.max(1, Math.min(denAns, numAns + offset));
+                    fake = `${fakeNum}/${denAns}`;
+                } else {
+                    let offset = (Math.random() > 0.5 ? 1 : -1) * (Math.floor(Math.random() * 4) + 1);
+                    fake = answer + offset;
+                    if (fake < 0) fake = Math.abs(fake);
+                }
+                if (!options.includes(fake)) {
+                    options.push(fake);
+                }
+            }
+            options.sort(() => Math.random() - 0.5);
+
+            // Render option buttons
+            const grid = document.getElementById('practice-options-grid');
+            grid.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white hover:bg-amber-50 text-slate-800 text-2xl font-extrabold p-5 rounded-2xl clay-card bouncy-hover border-2 border-amber-200 transition";
+                btn.textContent = opt;
+                btn.onclick = () => checkPracticeAnswer(opt, answer, btn);
+                grid.appendChild(btn);
+            });
+
+            document.getElementById('practice-hint-text').textContent = hintText;
+        }
+
+        function checkPracticeAnswer(selected, correct, btnEl) {
+            const feedback = document.getElementById('practice-feedback');
+            feedback.classList.remove('hidden');
+
+            const buttons = document.getElementById('practice-options-grid').querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+
+            if (selected.toString() === correct.toString()) {
+                playSound('correct');
+                state.practiceScore += 10;
+                state.stars += 5;
+                state.streak += 1;
+                updateHeaderStats();
+
+                feedback.className = "p-4 rounded-2xl text-center font-bold text-lg animate-pop bg-emerald-100 text-emerald-800 border border-emerald-300";
+                feedback.innerHTML = `🎉 Correct! Wonderful Job! (+5 Stars)`;
+                btnEl.className += " bg-emerald-400 text-white border-emerald-500";
+
+                document.getElementById('practice-next-btn').classList.remove('hidden');
+            } else {
+                playSound('wrong');
+                state.streak = 0;
+                updateHeaderStats();
+
+                feedback.className = "p-4 rounded-2xl text-center font-bold text-lg animate-pop bg-rose-100 text-rose-800 border border-rose-300";
+                feedback.innerHTML = `❌ Not quite! The correct answer was <strong>${correct}</strong>.`;
+                btnEl.className += " bg-rose-400 text-white border-rose-500";
+
+                document.getElementById('practice-next-btn').classList.remove('hidden');
+            }
+        }
+
+        function nextPracticeQuestion() {
+            playSound('click');
+            state.practiceQuestionCount++;
+            generatePracticeQuestion();
+        }
+
+        function togglePracticeHint() {
+            playSound('click');
+            const hintBox = document.getElementById('practice-hint-box');
+            hintBox.classList.toggle('hidden');
+        }
+
+        /* ==========================================================================
+           6. TIMED SPEED QUIZ GAME MODE
+           ========================================================================== */
+        function startTimedQuiz() {
+            switchTab('quiz');
+            document.getElementById('quiz-active-container').classList.remove('hidden');
+            document.getElementById('quiz-over-container').classList.add('hidden');
+
+            state.quizScore = 0;
+            state.quizTimeLeft = 60;
+            document.getElementById('quiz-score').textContent = state.quizScore;
+            document.getElementById('quiz-timer').textContent = state.quizTimeLeft;
+
+            generateQuizQuestion();
+
+            if (state.quizTimer) clearInterval(state.quizTimer);
+            state.quizTimer = setInterval(() => {
+                state.quizTimeLeft--;
+                document.getElementById('quiz-timer').textContent = state.quizTimeLeft;
+
+                if (state.quizTimeLeft <= 0) {
+                    clearInterval(state.quizTimer);
+                    endTimedQuiz();
+                }
+            }, 1000);
+        }
+
+        function generateQuizQuestion() {
+            const num1 = Math.floor(Math.random() * 12) + 1;
+            const num2 = Math.floor(Math.random() * 12) + 1;
+            const symbols = ['+', '-', '×'];
+            const sym = symbols[Math.floor(Math.random() * symbols.length)];
+
+            let ans;
+            if (sym === '+') ans = num1 + num2;
+            else if (sym === '-') ans = num1 >= num2 ? num1 - num2 : num2 - num1;
+            else ans = num1 * num2;
+
+            const actualNum1 = (sym === '-' && num1 < num2) ? num2 : num1;
+            const actualNum2 = (sym === '-' && num1 < num2) ? num1 : num2;
+
+            document.getElementById('quiz-question').textContent = `${actualNum1} ${sym} ${actualNum2} = ?`;
+
+            let choices = [ans];
+            while (choices.length < 4) {
+                let fake = ans + (Math.random() > 0.5 ? 1 : -1) * (Math.floor(Math.random() * 5) + 1);
+                if (fake >= 0 && !choices.includes(fake)) choices.push(fake);
+            }
+            choices.sort(() => Math.random() - 0.5);
+
+            const optionsGrid = document.getElementById('quiz-options');
+            optionsGrid.innerHTML = '';
+            choices.forEach(c => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white hover:bg-amber-50 text-slate-800 text-2xl font-extrabold p-4 rounded-2xl clay-card bouncy-hover border-2 border-indigo-200 transition";
+                btn.textContent = c;
+                btn.onclick = () => {
+                    if (c === ans) {
+                        playSound('correct');
+                        state.quizScore += 10;
+                        state.stars += 2;
+                    } else {
+                        playSound('wrong');
+                        state.quizScore = Math.max(0, state.quizScore - 5);
+                    }
+                    document.getElementById('quiz-score').textContent = state.quizScore;
+                    updateHeaderStats();
+                    generateQuizQuestion();
+                };
+                optionsGrid.appendChild(btn);
+            });
+        }
+
+        function endTimedQuiz() {
+            playSound('win');
+            document.getElementById('quiz-active-container').classList.add('hidden');
+            document.getElementById('quiz-over-container').classList.remove('hidden');
+            document.getElementById('quiz-final-score').textContent = state.quizScore;
+
+            const highScoreMsg = document.getElementById('quiz-high-score-msg');
+            if (state.quizScore > state.highScore) {
+                state.highScore = state.quizScore;
+                highScoreMsg.classList.remove('hidden');
+            } else {
+                highScoreMsg.classList.add('hidden');
+            }
+            updateHeaderStats();
+        }
+    </script>
+</body>
+</html>
